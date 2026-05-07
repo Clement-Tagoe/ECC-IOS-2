@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\CallLog;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
 class CallLogSeeder extends Seeder
@@ -22,7 +23,7 @@ class CallLogSeeder extends Seeder
             'shift' => 'Day',
             'start_time' => '07:00:00',
             'end_time' => '19:00:00',
-            'date' => '2026-04-20'
+            'date' => Carbon::now(),
         ]);
 
         CallLog::create([
@@ -35,7 +36,7 @@ class CallLogSeeder extends Seeder
             'shift' => 'Day',
             'start_time' => '07:00:00',
             'end_time' => '19:00:00',
-            'date' => '2026-04-21'
+            'date' => Carbon::now()->subDays(1)
         ]);
 
         CallLog::create([
@@ -48,7 +49,7 @@ class CallLogSeeder extends Seeder
             'shift' => 'Night',
             'start_time' => '19:00:00',
             'end_time' => '07:00:00',
-            'date' => '2026-04-21'
+            'date' => Carbon::now()->subDays(2)
         ]);
 
         CallLog::create([
@@ -61,7 +62,7 @@ class CallLogSeeder extends Seeder
             'shift' => 'Day',
             'start_time' => '07:00:00',
             'end_time' => '19:00:00',
-            'date' => '2026-04-22'
+            'date' => Carbon::now()->subDays(3)
         ]);
 
         CallLog::create([
@@ -74,7 +75,7 @@ class CallLogSeeder extends Seeder
             'shift' => 'Night',
             'start_time' => '19:00:00',
             'end_time' => '07:00:00',
-            'date' => '2026-04-22'
+            'date' => Carbon::now()->subDays(4)
         ]);
 
         CallLog::create([
@@ -87,7 +88,7 @@ class CallLogSeeder extends Seeder
             'shift' => 'Day',
             'start_time' => '07:00:00',
             'end_time' => '19:00:00',
-            'date' => '2026-04-23'
+            'date' => Carbon::now()->subDays(5)
         ]);
 
         CallLog::create([
@@ -100,7 +101,7 @@ class CallLogSeeder extends Seeder
             'shift' => 'Night',
             'start_time' => '19:00:00',
             'end_time' => '07:00:00',
-            'date' => '2026-04-23'
+            'date' => Carbon::now()->subDays(6)
         ]);
 
         CallLog::create([
@@ -113,7 +114,7 @@ class CallLogSeeder extends Seeder
             'shift' => 'Day',
             'start_time' => '07:00:00',
             'end_time' => '19:00:00',
-            'date' => '2026-04-24'
+            'date' => Carbon::now()->subDays(7)
         ]);
 
         CallLog::create([
@@ -126,7 +127,7 @@ class CallLogSeeder extends Seeder
             'shift' => 'Night',
             'start_time' => '19:00:00',
             'end_time' => '07:00:00',
-            'date' => '2026-04-24'
+            'date' => Carbon::now()->subDays(8)
         ]);
 
         CallLog::create([
@@ -139,7 +140,7 @@ class CallLogSeeder extends Seeder
             'shift' => 'Day',
             'start_time' => '07:00:00',
             'end_time' => '19:00:00',
-            'date' => '2026-04-22'
+            'date' => Carbon::now()->subDays(9)
         ]);
 
         CallLog::create([
@@ -152,7 +153,7 @@ class CallLogSeeder extends Seeder
             'shift' => 'Night',
             'start_time' => '19:00:00',
             'end_time' => '07:00:00',
-            'date' => '2026-04-22'
+            'date' => Carbon::now()->subDays(10)
         ]);
     }
 }

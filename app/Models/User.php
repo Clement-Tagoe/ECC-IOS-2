@@ -36,7 +36,6 @@ class User extends Authenticatable implements WirechatUser, Commenter
         'contact',
         'role_id',
         'department_id',
-        'theme',
     ];
 
     /**

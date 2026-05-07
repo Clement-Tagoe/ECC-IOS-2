@@ -37,7 +37,7 @@ class ValidCaseForm
                                     ->relationship('location', 'name')
                                     ->createOptionForm([
                                         TextInput::make('name')
-                                            ->unique()
+                                            ->unique(ignoreRecord: true)
                                             ->required(),
                                         Select::make('region_id')
                                             ->relationship('region', 'name')

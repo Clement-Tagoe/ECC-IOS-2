@@ -2,10 +2,10 @@
 
 namespace App\Filament\Resources\LogisticsManagement;
 
-use App\Filament\Resources\LogisticsManagement\Pages\ViewLogisticsManagement;
 use App\Filament\Resources\LogisticsManagement\Pages\CreateLogisticsManagement;
 use App\Filament\Resources\LogisticsManagement\Pages\EditLogisticsManagement;
 use App\Filament\Resources\LogisticsManagement\Pages\ListLogisticsManagement;
+use App\Filament\Resources\LogisticsManagement\Pages\ViewLogisticsManagement;
 use App\Filament\Resources\LogisticsManagement\Schemas\LogisticsManagementForm;
 use App\Filament\Resources\LogisticsManagement\Schemas\LogisticsManagementInfolist;
 use App\Filament\Resources\LogisticsManagement\Tables\LogisticsManagementTable;
@@ -17,6 +17,7 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use UnitEnum;
 
 class LogisticsManagementResource extends Resource
 {
@@ -27,6 +28,8 @@ class LogisticsManagementResource extends Resource
     protected static ?string $recordTitleAttribute = 'item';
 
     protected static ?string $navigationLabel = 'Logistics Management';
+
+    protected static string | UnitEnum | null $navigationGroup = 'Logistics';
 
     public static function form(Schema $schema): Schema
     {

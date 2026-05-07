@@ -2,7 +2,6 @@
 
 namespace App\Providers\Filament;
 
-use App\Http\Middleware\ApplyFilamentTheme;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -33,11 +32,11 @@ class AuthPanelProvider extends PanelProvider
             ->path('auth')
             ->viteTheme([
                 'resources/css/filament/auth/theme.css',
-                'resources/css/app.css'
+                'resources/css/app.css',
                 ])
             ->login()
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Orange,
                 'secondary' => Color::Emerald,
                 'auxiliary' => Color::Rose,
                 'tertiary' => Color::Purple,
@@ -55,6 +54,7 @@ class AuthPanelProvider extends PanelProvider
                 'General',
                 'Call-Taking',
                 'Monitoring',
+                'Logistics',
                 'Others'
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
@@ -106,19 +106,6 @@ class AuthPanelProvider extends PanelProvider
                     </script>
                 HTML,
             )
-            ->renderHook(
-                PanelsRenderHook::BODY_END,
-                fn (): string => <<<'HTML'
-                    <script>
-                        window.addEventListener('theme-applied', e => {
-                            const theme = e.detail.theme;
-                            document.documentElement.style.setProperty(
-                                '--sidebar-bg', theme.sidebar.background
-                            );
-                        });
-                    </script>
-                HTML,
-            )
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
@@ -129,7 +116,6 @@ class AuthPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
-                ApplyFilamentTheme::class
             ])
             ->authMiddleware([
                 Authenticate::class,

@@ -2,3 +2,34 @@
 
 @source '../../../../app/Filament/**/*';
 @source '../../../../resources/views/filament/**/*';
+
+
+.fi-sidebar {
+    background-color: #003049;
+}
+
+.fi-sidebar.fi-icon {
+    color: #F0F0F0;
+}
+
+.fi-sidebar-item-label {
+    color: #F0F0F0;
+}
+
+.fi-sidebar-item {
+    &.fi-active {
+        & > .fi-sidebar-item-btn {
+           background-color: #004B73;
+        }
+    }
+}
+
+.fi-sidebar-item {
+    & > .fi-sidebar-item-btn:hover {
+        background-color: #004B73;
+    }
+}
+
+.fi-main-ctn {
+    background-color: #FCF8F1;
+}
