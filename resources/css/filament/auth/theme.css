@@ -1,5 +1,8 @@
 @import '../../../../vendor/filament/filament/resources/css/theme.css';
 
+@source '../../../vendor/caresome/filament-auth-designer/resources/css/auth-designer.css';
+
+
 @source '../../../../app/Filament/**/*';
 @source '../../../../resources/views/filament/**/*';
 
@@ -8,11 +11,17 @@
     background-color: #003049;
 }
 
-.fi-sidebar.fi-icon {
+.fi-sidebar-item-btn {
+    & > .fi-icon {
     color: #F0F0F0;
+    }
 }
 
 .fi-sidebar-item-label {
+    color: #F0F0F0;
+}
+
+.fi-sidebar-group-label {
     color: #F0F0F0;
 }
 
