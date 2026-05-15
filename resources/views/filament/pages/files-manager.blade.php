@@ -2,7 +2,8 @@
         {{-- Main content --}}
     <div class="flex min-w-0 flex-1 flex-col gap-4">
         {{-- Toolbar --}}
-        @include('components.toolbar')
+        
+        <livewire:file-upload />
 
         {{-- Breadcrumbs --}}
         @include('components.breadcrumbs')

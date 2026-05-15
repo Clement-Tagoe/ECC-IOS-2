@@ -5,9 +5,7 @@
             {{-- Upload --}}
             {{-- {{ $this->uploadFilesAction }} --}}
             
-            <button>
-                Upload
-            </button>
+            {{-- @livewire('file-upload') --}}
             {{-- New folder --}}
             {{-- {{ $this->createFolderAction }} --}}
             <button>
