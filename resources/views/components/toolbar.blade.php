@@ -6,9 +6,8 @@
             {{ $this->uploadFilesAction }}
 
             {{-- New folder --}}
-            <x-filament::button wire:click="openNewUserModal" icon="heroicon-o-folder-plus" color="gray">
-                New folder
-            </x-filament::button>
+            {{ $this->createFolderAction }}
+            
 
             {{-- Refresh --}}
             <x-filament::button wire:click="openNewUserModal" icon="heroicon-o-arrow-path" color="gray">
@@ -18,31 +17,31 @@
 
         <div class="flex items-center gap-2">
             {{-- Sort dropdown --}}
-            {{-- <select
+            <select
                 wire:change="setSortField($event.target.value)"
                 class="fm-select"
             >
-                <option value="name" @selected($sortField === 'name')></option>
-                <option value="size" @selected($sortField === 'size')></option>
-                <option value="date" @selected($sortField === 'date')></option>
-                <option value="type" @selected($sortField === 'type')></option>
-            </select> --}}
+                <option value="name" @selected($sortField === 'name')>{{'Name'}}</option>
+                <option value="size" @selected($sortField === 'size')>{{'Size'}}</option>
+                <option value="date" @selected($sortField === 'date')>{{'Date'}}</option>
+                <option value="type" @selected($sortField === 'type')>{{'Type'}}</option>
+            </select>
 
             {{-- Sort direction toggle --}}
-            {{-- <button
+            <button
                 wire:click="setSortField('{{ $sortField }}')"
                 type="button"
                 class="flex size-9 items-center justify-center rounded-lg text-gray-400 transition hover:bg-gray-100 hover:text-gray-500 dark:hover:bg-white/5 dark:hover:text-gray-300"
-                title="{{ $sortDirection === 'asc' ? __('filament-file-manager::file-manager.toolbar.sort_asc') : __('filament-file-manager::file-manager.toolbar.sort_desc') }}"
+                title="{{ $sortDirection === 'asc' ? __('Ascending order') : __('Descending order') }}"
             >
                 <x-filament::icon
                     :icon="$sortDirection === 'asc' ? 'heroicon-m-bars-arrow-up' : 'heroicon-m-bars-arrow-down'"
                     class="size-5"
                 />
-            </button> --}}
+            </button>
 
             {{-- View mode toggle --}}
-            {{-- <div class="flex items-center rounded-lg bg-gray-100 p-0.5 dark:bg-white/5">
+            <div class="flex items-center rounded-lg bg-gray-100 p-0.5 dark:bg-white/5">
                 <button
                     wire:click="setViewMode('grid')"
                     type="button"
@@ -65,6 +64,6 @@
                 >
                     <x-filament::icon icon="heroicon-m-list-bullet" class="size-4" />
                 </button>
-            </div> --}}
+            </div>
         </div>
     </div>

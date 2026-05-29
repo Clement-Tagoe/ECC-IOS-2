@@ -11,4 +11,5 @@ class FilesManagerPage extends Page
     protected string $view = 'filament.pages.files-manager-page';
 
     protected static string | BackedEnum | null $navigationIcon = Heroicon::OutlinedFolderOpen;
+
 }
