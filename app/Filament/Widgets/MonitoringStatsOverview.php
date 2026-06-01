@@ -5,15 +5,25 @@ namespace App\Filament\Widgets;
 use App\Models\CameraAudit;
 use App\Models\MonitoringShiftReport;
 use Carbon\Carbon;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class MonitoringStatsOverview extends StatsOverviewWidget
 {
-
+    use InteractsWithPageFilters;
+    
     protected function getStats(): array
     {
-        $todayReports = MonitoringShiftReport::where('date', Carbon::today())->get();
+        $startDate = isset($this->pageFilters['startDate'])
+            ? Carbon::parse($this->pageFilters['startDate'])->startOfDay()
+            : now()->startOfMonth()->startOfDay();
+
+        $endDate = isset($this->pageFilters['endDate'])
+            ? Carbon::parse($this->pageFilters['endDate'])->endOfDay()
+            : now()->endOfDay();
+
+        $todayReports = MonitoringShiftReport::whereBetween('date', [$startDate, $endDate])->get();
         
         $totalExpected  = $todayReports->sum('expected_attendance');
         $totalPresent   = $todayReports->sum('present');
@@ -23,14 +33,8 @@ class MonitoringStatsOverview extends StatsOverviewWidget
             ? round(($totalPresent / $totalExpected) * 100, 1)
             : 0;
         
-        $last7Attendance = collect(range(6, 0))->map(function ($daysAgo) {
-            $reports = MonitoringShiftReport::whereDate('date', today()->subDays($daysAgo))->get();
-            $expected = $reports->sum('expected_attendance');
-            $present  = $reports->sum('present');
-            return $expected > 0 ? round(($present / $expected) * 100) : 0;
-        })->toArray();
     
-        $cameraAudits = CameraAudit::whereDate('updated_at', now()->toDateString())->count();
+        $cameraAudits = CameraAudit::whereBetween('updated_at', [$startDate, $endDate])->count();
       
 
         return [
@@ -42,7 +46,7 @@ class MonitoringStatsOverview extends StatsOverviewWidget
                 ->description("{$attendanceRate}% attendance rate")
                 ->descriptionIcon('heroicon-m-check-badge')
                 ->color($attendanceRate >= 85 ? 'success' : ($attendanceRate >= 70 ? 'warning' : 'danger'))
-                ->chart($last7Attendance),
+                ->chart([5, 2, 6, 3, 7, 4, 3, 5]),
  
             Stat::make('Staff Absent', number_format($totalAbsent))
                 ->description(round(100 - $attendanceRate, 1) . '% absence rate today')

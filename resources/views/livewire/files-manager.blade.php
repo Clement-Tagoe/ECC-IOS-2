@@ -108,9 +108,9 @@
                     @if ($hasMoreFiles)
                         {{ __(':shown of :total files', ['shown' => $fileCount, 'total' => $totalFiles]) }}
                     @else
-                        {{ trans_choice(':count file|:count files', $totalFiles, ['count' => $totalFiles]) }}
+                        {{ $totalFiles }} {{ $totalFiles === 1 ? ':count file' : ':count files' }}
                     @endif
-                    {{ $folderCount > 0 ? ', ' . trans_choice(':count folder|:count folders', $folderCount, ['count' => $folderCount]) : '' }}
+                    {{ $folderCount > 0 ? ', ' . $folderCount . ($folderCount === 1 ? ':count folder' : ':count folders') : '' }}
                 </div>
             @else
                 <div class="flex flex-1 flex-col items-center justify-center gap-3 p-16 text-gray-400 dark:text-gray-500">

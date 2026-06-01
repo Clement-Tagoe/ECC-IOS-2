@@ -2,33 +2,47 @@
 
 namespace App\Filament\Widgets;
 
-use App\Models\CameraAudit;
 use App\Models\Region;
+use Carbon\Carbon;
 use Filament\Widgets\ChartWidget;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 
 class CameraStatusByRegionChart extends ChartWidget
 {
+    use InteractsWithPageFilters;
+    
     protected ?string $heading = 'Camer Status By Region Chart';
 
-     protected ?string $description = 'Online vs offline cameras per region';
+    protected ?string $description = 'Online vs offline cameras per region';
 
     protected function getData(): array
     {
-        $regions = Region::leftJoin('camera_audits', 'regions.id', '=', 'camera_audits.region_id')
+        $startDate = isset($this->pageFilters['startDate'])
+            ? Carbon::parse($this->pageFilters['startDate'])->startOfDay()
+            : now()->startOfMonth()->startOfDay();
+
+        $endDate = isset($this->pageFilters['endDate'])
+            ? Carbon::parse($this->pageFilters['endDate'])->endOfDay()
+            : now()->endOfDay();
+
+        $regions = Region::leftJoin('camera_audits', function ($join) use ($startDate, $endDate) {
+                $join->on('regions.id', '=', 'camera_audits.region_id')
+                ->whereBetween('camera_audits.updated_at', [$startDate, $endDate]);
+            })
             ->selectRaw("regions.id, regions.name as region_name, camera_audits.status, count(camera_audits.id) as total")
             ->groupBy('regions.id', 'regions.name', 'camera_audits.status')
             ->get()
             ->groupBy('region_name');
- 
+
         $labels  = $regions->keys()->toArray();
         $online  = [];
         $offline = [];
- 
+
         foreach ($regions as $region => $cameras) {
             $online[]  = $cameras->where('status', 'online')->sum('total');
             $offline[] = $cameras->where('status', 'offline')->sum('total');
         }
- 
+
         return [
             'datasets' => [
                 [
@@ -46,7 +60,8 @@ class CameraStatusByRegionChart extends ChartWidget
                     'borderWidth'     => 2,
                 ],
             ],
-            'labels' => $labels,        ];
+            'labels' => $labels,
+        ];
     }
  
     protected function getType(): string

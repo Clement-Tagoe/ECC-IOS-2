@@ -3,49 +3,60 @@
 namespace App\Filament\Widgets;
 
 use App\Models\ValidCase;
+use Carbon\Carbon;
 use Filament\Widgets\ChartWidget;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Illuminate\Support\Facades\DB;
 
 class CasesByNatureChart extends ChartWidget
 {
+    use InteractsWithPageFilters;
+    
     protected ?string $heading = 'Cases By Nature Chart';
 
-    protected ?string $description = 'Incident type breakdown for the last 7 days';
+    protected ?string $description = 'Incident type breakdown';
 
     protected function getData(): array
     {
-        $data = ValidCase::where('reporting_date', '>', now()->subDays(7))
+        $startDate = isset($this->filters['startDate'])
+            ? Carbon::parse($this->filters['startDate'])->startOfDay()
+            : now()->startOfMonth()->startOfDay();
+
+        $endDate = isset($this->filters['endDate'])
+            ? Carbon::parse($this->filters['endDate'])->endOfDay()
+            : now()->endOfDay();
+
+        $data = ValidCase::whereBetween('reporting_date', [$startDate, $endDate])
             ->select('valid_case_nature_id', DB::raw('count(*) as total'))
             ->with('validCaseNature')
             ->groupBy('valid_case_nature_id')
             ->orderByDesc('total')
             ->get();
- 
+
         $total = $data->sum('total');
- 
-        $labels      = [];
-        $values      = [];
-        $richLabels  = []; // "Name — N (X%)" used in legend
- 
+
+        $labels     = [];
+        $values     = [];
+        $richLabels = [];
+
         $palette = [
             '#1d4ed8', '#059669', '#dc2626', '#7c3aed',
             '#d97706', '#0891b2', '#be185d', '#65a30d',
             '#ea580c', '#6366f1', '#0f766e',
         ];
- 
+
         foreach ($data as $i => $row) {
-            $name        = $row->validCaseNature?->name ?? "Nature {$row->valid_case_nature_id}";
-            $count       = $row->total;
-            $pct         = $total > 0 ? round(($count / $total) * 100, 1) : 0;
- 
-            $labels[]     = $name;
+            $name  = $row->validCaseNature?->name ?? "Nature {$row->valid_case_nature_id}";
+            $count = $row->total;
+            $pct   = $total > 0 ? round(($count / $total) * 100, 1) : 0;
+
+            $labels[]     = "{$name} ({$count} — {$pct}%)";  // value baked into label
             $values[]     = $count;
-            // Rich label shown in the tooltip and passed via extraData for JS use
             $richLabels[] = "{$name} — {$count} ({$pct}%)";
         }
- 
+
         $colors = collect($labels)->map(fn ($_, $i) => $palette[$i % count($palette)])->toArray();
- 
+
         return [
             'datasets' => [
                 [
@@ -55,10 +66,15 @@ class CasesByNatureChart extends ChartWidget
                     'borderWidth'     => 2,
                     'borderColor'     => '#ffffff',
                     'hoverOffset'     => 8,
+                    'datalabels'      => [
+                        'display'    => true,
+                        'color'      => '#ffffff',
+                        'font'       => ['weight' => 'bold', 'size' => 12],
+                        'formatter'  => "JS::(value, ctx) => value > 0 ? value : ''",
+                    ],
                 ],
             ],
-            'labels' => $labels,
-            // Extra payload consumed by the JS options callbacks below
+            'labels'     => $labels,
             'richLabels' => $richLabels,
             'total'      => $total,
         ];
@@ -72,28 +88,11 @@ class CasesByNatureChart extends ChartWidget
     protected function getOptions(): array
     {
         return [
-            'cutout'  => '62%',
             'plugins' => [
-                'legend' => [
-                    'position' => 'right',
-                    'labels'   => [
-                        'boxWidth'  => 12,
-                        'padding'   => 14,
-                        'font'      => ['size' => 12],
-                        
-                        /*
-                         * generateLabels is a JS function — Filament passes options
-                         * as JSON, so closures must be injected via getExtraDataAttributes
-                         * or a custom Livewire view. We handle this in getOptions() by
-                         * using Chart.js tooltip callbacks instead (see tooltip block below).
-                         *
-                         * The legend labels are enriched on the PHP side via $richLabels
-                         * which replaces $labels when the chart is rendered (see view override).
-                         */
-                    ],
-                ],
-                'tooltip' => [
-                    'enabled' => true,
+                'datalabels' => [
+                    'display'   => true,
+                    'color'     => '#ffffff',
+                    'font'      => ['weight' => 'bold', 'size' => 12],
                 ],
             ],
         ];

@@ -5,36 +5,34 @@ namespace App\Filament\Widgets;
 use App\Models\Topic;
 use Carbon\Carbon;
 use Filament\Widgets\ChartWidget;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 
 class TopMonitoringTopicsChart extends ChartWidget
 {
+    use InteractsWithPageFilters;
+    
     protected ?string $heading = 'Top Monitoring Topics Chart';
 
     protected ?string $description = 'Most frequently tagged topics across monitoring tasks';
 
-    public ?string $filter = '30';
-
-    protected function getFilters(): ?array
-    {
-        return [
-            '7'  => 'Last 7 days',
-            '30' => 'Last 30 days',
-            '90' => 'Last 90 days',
-        ];
-    }
- 
     protected function getData(): array
     {
-        $days = (int) ($this->filter ?? 30);
- 
-        $data = Topic::withCount(['monitoringTasks' => function ($query) use ($days) {
-            $query->whereDate('date', '>=', Carbon::now()->subDays($days));
-        }])
+        $startDate = isset($this->pageFilters['startDate'])
+            ? Carbon::parse($this->pageFilters['startDate'])->startOfDay()
+            : now()->startOfMonth()->startOfDay();
+
+        $endDate = isset($this->pageFilters['endDate'])
+            ? Carbon::parse($this->pageFilters['endDate'])->endOfDay()
+            : now()->endOfDay();
+
+        $data = Topic::withCount(['monitoringTasks' => function ($query) use ($startDate, $endDate) {
+                $query->whereBetween('date', [$startDate, $endDate]);
+            }])
             ->having('monitoring_tasks_count', '>', 0)
             ->orderByDesc('monitoring_tasks_count')
             ->limit(8)
             ->get();
- 
+
         $backgroundColors = [
             'rgba(59, 130, 246, 0.8)',
             'rgba(16, 185, 129, 0.8)',
@@ -45,7 +43,7 @@ class TopMonitoringTopicsChart extends ChartWidget
             'rgba(249, 115, 22, 0.8)',
             'rgba(236, 72, 153, 0.8)',
         ];
- 
+
         return [
             'datasets' => [
                 [

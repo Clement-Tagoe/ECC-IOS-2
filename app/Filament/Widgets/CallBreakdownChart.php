@@ -5,28 +5,41 @@ namespace App\Filament\Widgets;
 use App\Models\CallLog;
 use Carbon\Carbon;
 use Filament\Widgets\ChartWidget;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 
 class CallBreakdownChart extends ChartWidget
 {
-    protected ?string $heading = 'Call Breakdown — Last 7 Days';
+    use InteractsWithPageFilters;
+    
+    protected ?string $heading = 'Call Breakdown';
  
     protected ?string $description = 'Incoming, valid, and prank calls per day';
  
  
     protected function getData(): array
     {
-        $days = collect(range(6, 0))->map(fn ($d) => now()->subDays($d)->toDateString());
- 
-        $logs = CallLog::where('date', '>', now()->subDays(7))
+        $startDate = isset($this->pageFilters['startDate'])
+            ? Carbon::parse($this->pageFilters['startDate'])->startOfDay()
+            : now()->startOfMonth()->startOfDay();
+
+        $endDate = isset($this->pageFilters['endDate'])
+            ? Carbon::parse($this->pageFilters['endDate'])->endOfDay()
+            : now()->endOfDay();
+
+        // Dynamically generate days between the selected range
+        $days = collect(Carbon::parse($startDate)->toPeriod($endDate, '1 day'))
+            ->map(fn ($d) => $d->toDateString());
+
+        $logs = CallLog::whereBetween('date', [$startDate, $endDate])
             ->orderBy('date')
             ->get()
             ->keyBy(fn ($row) => Carbon::parse($row->date)->toDateString());
- 
-        $labels  = $days->map(fn ($d) => Carbon::parse($d)->format('D d M'))->toArray();
-        $total   = $days->map(fn ($d) => $logs->get($d)?->total_calls_received ?? 0)->toArray();
-        $valid   = $days->map(fn ($d) => $logs->get($d)?->valid_calls ?? 0)->toArray();
-        $prank   = $days->map(fn ($d) => $logs->get($d)?->prank_calls ?? 0)->toArray();
- 
+
+        $labels = $days->map(fn ($d) => Carbon::parse($d)->format('D d M'))->toArray();
+        $total  = $days->map(fn ($d) => $logs->get($d)?->total_calls_received ?? 0)->toArray();
+        $valid  = $days->map(fn ($d) => $logs->get($d)?->valid_calls ?? 0)->toArray();
+        $prank  = $days->map(fn ($d) => $logs->get($d)?->prank_calls ?? 0)->toArray();
+
         return [
             'datasets' => [
                 [
@@ -34,18 +47,21 @@ class CallBreakdownChart extends ChartWidget
                     'data'            => $total,
                     'backgroundColor' => '#1d4ed8',
                     'borderRadius'    => 4,
+                    'borderWidth'     => 0,
                 ],
                 [
                     'label'           => 'Valid Calls',
                     'data'            => $valid,
                     'backgroundColor' => '#059669',
                     'borderRadius'    => 4,
+                    'borderWidth'     => 0,
                 ],
                 [
                     'label'           => 'Prank / Invalid',
                     'data'            => $prank,
                     'backgroundColor' => '#dc2626',
                     'borderRadius'    => 4,
+                    'borderWidth'     => 0,
                 ],
             ],
             'labels' => $labels,

@@ -3,20 +3,31 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Task;
+use Carbon\Carbon;
 use Filament\Widgets\ChartWidget;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Flowframe\Trend\Trend;
 use Flowframe\Trend\TrendValue;
 use Illuminate\Support\Facades\Auth;
 
 class TaskChart extends ChartWidget
 {
+    use InteractsWithPageFilters;
+
     protected ?string $heading = 'Task Chart';
 
     protected static ?int $sort = 6;
 
     protected function getData(): array
     {
-        $userId = Auth::id();
+
+        $startDate = isset($this->pageFilters['startDate'])
+            ? Carbon::parse($this->pageFilters['startDate'])->startOfDay()
+            : now()->startOfMonth()->startOfDay();
+
+        $endDate = isset($this->pageFilters['endDate'])
+            ? Carbon::parse($this->pageFilters['endDate'])->endOfDay()
+            : now()->endOfDay();
 
         // Use a subquery or a focused query to avoid including extra columns 
         // that trigger the GROUP BY error.
@@ -27,8 +38,8 @@ class TaskChart extends ChartWidget
 
         $data = Trend::query($query)
             ->between(
-                start: now()->startOfMonth(),
-                end: now()->endOfMonth(),
+                start: $startDate,
+                end: $endDate,
             )
             ->perDay()
             ->count();

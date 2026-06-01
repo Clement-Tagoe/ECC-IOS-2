@@ -6,6 +6,7 @@ use App\Models\File;
 use App\Models\User;
 use App\Enums\FileManager\SortDirection;
 use App\Enums\FileManager\ViewMode;
+use App\Traits\HandlesBulkOperations;
 use App\Traits\HandlesFolderOperations;
 use App\Traits\HandlesUpload;
 use Filament\Actions\Concerns\InteractsWithActions;
@@ -22,7 +23,7 @@ use Livewire\WithPagination;
 
 class FilesManager extends Component implements HasActions, HasForms
 {
-    use InteractsWithActions, InteractsWithForms, WithFileUploads, WithPagination, HandlesUpload, HandlesFolderOperations;
+    use InteractsWithActions, InteractsWithForms, WithFileUploads, WithPagination, HandlesUpload, HandlesFolderOperations, HandlesBulkOperations;
 
     public ?File $currentFolder;
     public $folder = '';

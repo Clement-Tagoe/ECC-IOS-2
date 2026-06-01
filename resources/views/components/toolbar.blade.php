@@ -1,4 +1,27 @@
+@if (count($selectedItems) > 0)
+    {{-- Bulk action bar --}}
+    <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                {{ count($selectedItems) }} {{ count($selectedItems) === 1 ? 'item' : 'items' }} selected
+            </span>
 
+            {{ $this->deleteSelectedAction }}
+           
+            {{ $this->moveSelectedAction }}
+           
+        </div>
+
+        <button
+            wire:click="clearSelection"
+            type="button"
+            class="flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-gray-500 transition hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-white/5 dark:hover:text-gray-300"
+        >
+            <x-filament::icon icon="heroicon-m-x-mark" class="size-4" />
+            {{ __('filament-file-manager::file-manager.toolbar.deselect') }}
+        </button>
+    </div>
+@else
     {{-- Normal toolbar --}}
     <div class="flex flex-wrap items-center justify-between gap-3">
         <div class="flex items-center gap-2">
@@ -67,3 +90,4 @@
             </div>
         </div>
     </div>
+@endif

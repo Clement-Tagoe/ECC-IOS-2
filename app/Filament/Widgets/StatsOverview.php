@@ -4,24 +4,42 @@ namespace App\Filament\Widgets;
 
 use App\Models\Report;
 use App\Models\Task;
+use Carbon\Carbon;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Facades\Auth;
 
 class StatsOverview extends StatsOverviewWidget
 {
+    use InteractsWithPageFilters;
+    
     protected function getStats(): array
     {
-        $taskAssigned = Task::whereHas('collaborators', fn ($q) => $q->where('users.id', Auth::id()))->count();
+        $startDate = isset($this->pageFilters['startDate']) 
+                    ? Carbon::parse($this->pageFilters['startDate'])->startOfDay() 
+                    : now()->startOfMonth()->startOfDay();
+
+        $endDate = isset($this->pageFilters['endDate']) 
+                        ? Carbon::parse($this->pageFilters['endDate'])->endOfDay() 
+                        : now()->endOfDay();
+
+        $taskAssigned = Task::whereHas('collaborators', fn ($q) => $q->where('users.id', Auth::id()))
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->count();
 
         $tasksCompleted = Task::where('status', 'completed')
-            ->whereHas('collaborators', function ($query) {
-                $query->where('users.id', Auth::id());
-            })
+            ->whereHas('collaborators', fn ($q) => $q->where('users.id', Auth::id()))
+            ->whereBetween('created_at', [$startDate, $endDate])
             ->count();
-        $reportsSent = Report::where('user_id', Auth::id())->count();
 
-        $reportsReceived = Report::whereHas('receivers', fn ($q) => $q->where('users.id', Auth::id()))->count();
+        $reportsSent = Report::where('user_id', Auth::id())
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->count();
+
+        $reportsReceived = Report::whereHas('receivers', fn ($q) => $q->where('users.id', Auth::id()))
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->count();
 
         return [
             Stat::make('Reports Sent', $reportsSent)
