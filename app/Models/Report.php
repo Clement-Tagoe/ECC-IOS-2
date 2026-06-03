@@ -6,7 +6,6 @@ use App\Enums\ReportPriority;
 use App\Enums\ReportStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Kirschbaum\Commentions\Contracts\Commentable;
 use Kirschbaum\Commentions\HasComments;
@@ -42,11 +41,6 @@ class Report extends Model implements HasMedia, Commentable
     public function department(): BelongsTo
     {
         return $this->belongsTo(Department::class);
-    }
-
-    public function reportComments(): HasMany
-    {
-        return $this->hasMany(ReportComment::class);
     }
 
     public function task(): BelongsTo

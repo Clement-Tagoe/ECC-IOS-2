@@ -4,7 +4,6 @@ namespace App\Filament\Resources\Tasks\Schemas;
 
 use App\Enums\TaskStatus;
 use App\Models\Task;
-use App\Models\User;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
@@ -54,7 +53,12 @@ class TaskInfolist
                     ->columnSpanFull()
                     ->schema([
                         CommentsEntry::make('comments')
-                            ->mentionables(fn (Task $record) => $record->collaborators)
+                            ->mentionables(function (Task $record) {
+                                return $record->collaborators
+                                    ->push($record->user)
+                                    ->filter()
+                                    ->unique('id');
+                            })
                             ->perPage(8),
                     ]),
                 ]);

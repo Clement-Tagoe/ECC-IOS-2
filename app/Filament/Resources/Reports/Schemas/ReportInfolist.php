@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\Reports\Schemas;
 
 use App\Models\Report;
-use App\Models\User;
 use Filament\Actions\Action;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\RepeatableEntry;
@@ -139,7 +138,13 @@ class ReportInfolist
                     ->columnSpanFull()
                     ->schema([
                         CommentsEntry::make('comments')
-                            ->mentionables(fn (Report $record) => $record->receivers)
+                            ->mentionables(function (Report $record) {
+                                return $record->receivers
+                                    ->push($record->user)
+                                    ->filter()
+                                    ->unique('id');
+
+                            })
                             ->perPage(8),
                     ]),
                 ]);

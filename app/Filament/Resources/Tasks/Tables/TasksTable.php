@@ -123,7 +123,12 @@ class TasksTable
                 ViewAction::make(),
                 EditAction::make(),
                 CommentsAction::make()
-                    ->mentionables(fn (Task $record) => $record->collaborators)
+                    ->mentionables(function (Task $record) {
+                                return $record->collaborators
+                                    ->push($record->user)
+                                    ->filter()
+                                    ->unique('id');
+                    })
                     ->perPage(10),
                 DeleteAction::make(),
                 ForceDeleteAction::make(),

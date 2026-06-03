@@ -127,7 +127,12 @@ class ReportsTable
                 ViewAction::make(),
                 EditAction::make(),
                 CommentsAction::make()
-                    ->mentionables(fn (Report $record) => $record->receivers)
+                    ->mentionables(function (Report $record) {
+                        return $record->receivers
+                            ->push($record->user)
+                            ->filter()
+                            ->unique('id');
+                    })
                     ->perPage(10),
                 DeleteAction::make(),
                 ForceDeleteAction::make(),

@@ -4,7 +4,6 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-use FilamentInbox\Concerns\HasInbox;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -102,10 +101,5 @@ class User extends Authenticatable implements WirechatUser, Commenter
     public function reports(): HasMany
     {
         return $this->hasMany(Report::class);
-    }
-
-    public function reportComments(): HasMany
-    {
-        return $this->hasMany(ReportComment::class);
     }
 }
