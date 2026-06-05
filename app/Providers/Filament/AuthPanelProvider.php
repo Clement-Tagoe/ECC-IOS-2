@@ -62,7 +62,8 @@ class AuthPanelProvider extends PanelProvider
                 'General',
                 'Call-Taking',
                 'Monitoring',
-                'Logistics',
+                'Estate & Logistics',
+                'Forensics',
                 'Others'
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')

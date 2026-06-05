@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('logistics_distributions', function (Blueprint $table) {
+        Schema::create('procurements', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('logistics_management_id')->nullable()->constrained('logistics_management')->cascadeOnDelete();
-            $table->string('department')->nullable();
-            $table->string('quantity')->nullable();
-            $table->date('date')->nullable();
+            $table->date('date');
+            $table->string('item');
+            $table->string('quantity');
+            $table->string('priority')->default('medium');
+            $table->text('purpose')->nullable();
+            $table->text('feedback')->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->userstamps();
@@ -29,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('logistics_distributions');
+        Schema::dropIfExists('procurements');
     }
 };

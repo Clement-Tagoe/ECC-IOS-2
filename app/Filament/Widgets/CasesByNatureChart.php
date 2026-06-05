@@ -40,9 +40,9 @@ class CasesByNatureChart extends ChartWidget
         $richLabels = [];
 
         $palette = [
-            '#1d4ed8', '#059669', '#dc2626', '#7c3aed',
+            '#059669', '#dc2626', '#7c3aed',
             '#d97706', '#0891b2', '#be185d', '#65a30d',
-            '#ea580c', '#6366f1', '#0f766e',
+            '#ea580c', '#6366f1', '#0f766e', '#1d4ed8',
         ];
 
         foreach ($data as $i => $row) {

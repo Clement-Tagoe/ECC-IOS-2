@@ -29,7 +29,7 @@ class LogisticsManagementResource extends Resource
 
     protected static ?string $navigationLabel = 'Logistics Management';
 
-    protected static string | UnitEnum | null $navigationGroup = 'Logistics';
+    protected static string | UnitEnum | null $navigationGroup = 'Estate & Logistics';
 
     public static function form(Schema $schema): Schema
     {

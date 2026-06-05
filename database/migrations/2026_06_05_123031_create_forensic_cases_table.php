@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('logistics_distributions', function (Blueprint $table) {
+        Schema::create('forensic_cases', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('logistics_management_id')->nullable()->constrained('logistics_management')->cascadeOnDelete();
-            $table->string('department')->nullable();
-            $table->string('quantity')->nullable();
-            $table->date('date')->nullable();
+            $table->string('case_title');
+            $table->string('reference_id');
+            $table->string('location');
+            $table->string('status');
+            $table->longText('description');
             $table->timestamps();
             $table->softDeletes();
             $table->userstamps();
@@ -29,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('logistics_distributions');
+        Schema::dropIfExists('forensic_cases');
     }
 };
