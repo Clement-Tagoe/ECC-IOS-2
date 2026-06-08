@@ -25,12 +25,14 @@ class ForensicCaseInfolist
                     ->columns(3)
                     ->columnSpanFull()
                     ->schema([
+                            TextEntry::make('reference_id')
+                                ->label('Reference ID'),
                             TextEntry::make('case_title'),
-                            TextEntry::make('reference_id'),
                             TextEntry::make('location'),
-                            TextEntry::make('description'), 
                             TextEntry::make('status')
-                                        ->badge(),
+                                ->badge(),
+                            TextEntry::make('description') 
+                                ->columnSpanFull(),
                             ]),
                 
                 Section::make('Attachments')

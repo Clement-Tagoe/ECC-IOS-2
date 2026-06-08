@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Visitor;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -32,6 +33,9 @@ class DatabaseSeeder extends Seeder
             TopicSeeder::class,
             MonitoringStaffSeeder::class,
             MonitoringConsoleSeeder::class,
+            ForensicCaseSeeder::class,
+            ForensicReportSeeder::class,
+            VisitorSeeder::class,
         ]);
     }
 }
