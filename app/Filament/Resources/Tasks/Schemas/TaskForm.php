@@ -9,6 +9,7 @@ use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Schemas\Components\Section;
@@ -66,6 +67,18 @@ class TaskForm
                                 TaskStatus::Completed,
                                 TaskStatus::Completed->value,
                             ])),
+                        SpatieMediaLibraryFileUpload::make('images')
+                            ->collection('task-images')
+                            ->multiple()
+                            ->image()
+                            ->preserveFilenames()
+                            ->maxFiles(4)
+                            ->nullable(),
+                        SpatieMediaLibraryFileUpload::make('files/videos')
+                            ->collection('task-files')
+                            ->multiple()
+                            ->preserveFilenames()
+                            ->nullable(),
                     ]),
             ]);
     }

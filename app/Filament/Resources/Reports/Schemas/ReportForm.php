@@ -39,7 +39,8 @@ class ReportForm
                                 'Analysis' => 'Analysis',
                                 'Field' => 'Field',
                                 'Evaluation' => 'Evaluation',
-                                'Situational' => 'Situational'
+                                'Situational' => 'Situational',
+                                'Briefing' => 'Briefing'
                             ])
                             ->required(),
                         Select::make('shift')

@@ -11,15 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('suspects', function (Blueprint $table) {
+        Schema::create('vehicles', function (Blueprint $table) {
             $table->id();
-            $table->date('date');
             $table->string('name');
-            $table->string('officer_in_charge');
-            $table->text('personal_items')->nullable();
-            $table->time('time_in')->nullable();
-            $table->time('time_out')->nullable();
-            $table->string('time_stayed')->nullable();
+            $table->string('registration_number');
+            $table->string('vehicle_make');
+            $table->string('model');
+            $table->year('year');
+            $table->string('category')->nullable();
+            $table->string('status')->nullable();
+            $table->string('availability')->nullable();
+            $table->string('assigned_driver')->nullable();
+            $table->string('location')->nullable();
+            $table->date('last_service_date')->nullable();
             $table->text('notes')->nullable();
             $table->timestamps();
             $table->softDeletes();
@@ -33,6 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('suspects');
+        Schema::dropIfExists('vehicles');
     }
 };

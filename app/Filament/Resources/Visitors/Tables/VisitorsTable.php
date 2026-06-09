@@ -47,8 +47,7 @@ class VisitorsTable
                 TextColumn::make('time_out')
                     ->dateTime()
                     ->sortable(),
-                TextColumn::make('time_stayed')
-                    ->searchable(),
+                TextColumn::make('time_stayed'),
                TextColumn::make('creator.name')
                     ->label('Created by')
                     ->searchable()

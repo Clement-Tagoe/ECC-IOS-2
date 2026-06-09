@@ -36,6 +36,8 @@ class DatabaseSeeder extends Seeder
             ForensicCaseSeeder::class,
             ForensicReportSeeder::class,
             VisitorSeeder::class,
+            SuspectSeeder::class,
+            VehicleSeeder::class,
         ]);
     }
 }

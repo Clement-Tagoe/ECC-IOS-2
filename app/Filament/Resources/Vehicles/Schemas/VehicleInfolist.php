@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Suspects\Schemas;
+namespace App\Filament\Resources\Vehicles\Schemas;
 
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Group;
@@ -8,7 +8,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 
-class SuspectInfolist
+class VehicleInfolist
 {
     public static function configure(Schema $schema): Schema
     {
@@ -18,16 +18,17 @@ class SuspectInfolist
                     ->columns(3)
                     ->columnSpanFull()
                     ->schema([
-                            TextEntry::make('date'),
                             TextEntry::make('name'),
-                            TextEntry::make('officer_in_charge'),
-                            TextEntry::make('personal_items')
-                                ->html(),
-                            TextEntry::make('time_in')
-                                ->time(),
-                            TextEntry::make('time_out')
-                                ->time(),
-                            TextEntry::make('time_stayed'),
+                            TextEntry::make('registration_number'),
+                            TextEntry::make('vehicle_make'),
+                            TextEntry::make('model'),
+                            TextEntry::make('year'),
+                            TextEntry::make('category'),
+                            TextEntry::make('status'),
+                            TextEntry::make('availability'),
+                            TextEntry::make('assigned_driver'),
+                            TextEntry::make('location'),
+                            TextEntry::make('last_service_date'),
                             TextEntry::make('notes')
                                 ->columnSpanFull(),
                         ]),

@@ -121,6 +121,17 @@ class ReportsTable
 
                 SelectFilter::make('priority')
                     ->options(ReportPriority::class),
+                SelectFilter::make('type')
+                    ->options([
+                                'General' => 'General',
+                                'Monitoring' => 'Monitoring',
+                                'Incident' => 'Incident',
+                                'Analysis' => 'Analysis',
+                                'Field' => 'Field',
+                                'Evaluation' => 'Evaluation',
+                                'Situational' => 'Situational',
+                                'Briefing' => 'Briefing'
+                            ]),
                 TrashedFilter::make(),
             ], layout: FiltersLayout::AboveContent)
             ->recordActions([

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Suspects\Tables;
+namespace App\Filament\Resources\Vehicles\Tables;
 
 use Carbon\Carbon;
 use Filament\Actions\BulkActionGroup;
@@ -17,30 +17,39 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\Indicator;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
-class SuspectsTable
+class VehiclesTable
 {
     public static function configure(Table $table): Table
     {
         return $table
             ->columns([
-                TextColumn::make('date')
-                    ->date()
-                    ->sortable(),
                 TextColumn::make('name')
                     ->searchable(),
-                TextColumn::make('officer_in_charge')
+                TextColumn::make('registration_number')
                     ->searchable(),
-                TextColumn::make('time_in')
-                    ->dateTime()
+                TextColumn::make('vehicle_make')
+                    ->searchable(),
+                TextColumn::make('category')
+                    ->badge()
+                    ->searchable(),
+                TextColumn::make('status')
+                    ->badge()
+                    ->searchable(),
+                TextColumn::make('availability')
+                    ->badge()
+                    ->searchable(),
+                TextColumn::make('assigned_driver')
+                    ->searchable(),
+                TextColumn::make('location')
+                    ->searchable(),
+                TextColumn::make('last_service_date')
+                    ->date()
                     ->sortable(),
-                TextColumn::make('time_out')
-                    ->dateTime()
-                    ->sortable(),
-                TextColumn::make('time_stayed'),
                 TextColumn::make('creator.name')
                     ->label('Created by')
                     ->searchable()
@@ -97,6 +106,31 @@ class SuspectsTable
 
                         return $indicators;
                     })->columnSpan(2)->columns(2),
+                    SelectFilter::make('category')
+                        ->options([
+                            'suv' => 'SUV', 
+                            'sedan' => 'Sedan', 
+                            'pickup truck' => 'Pickup Truck', 
+                            'van' => 'Van', 
+                            'minibus' => 'Minibus', 
+                            'bus' => 'Bus', 
+                            'truck'=> 'Truck', 
+                            'motorcycle' => 'Motorcycle', 
+                            'other' => 'Other'
+                        ]),
+                    SelectFilter::make('status')
+                        ->options([
+                            'active' => 'Active',
+                            'maintenance' => 'Maintenance',
+                            'retired' => 'Retired'
+                        ]),
+                    SelectFilter::make('availability')
+                        ->options([
+                            'available' => 'Available', 
+                            'in-use' => 'In-use', 
+                            'unavailable' => 'Unavailable', 
+                            'reserved' => 'Reserved',
+                        ]),
                     TrashedFilter::make(),
                 ], layout: FiltersLayout::AboveContent)
             ->recordActions([
